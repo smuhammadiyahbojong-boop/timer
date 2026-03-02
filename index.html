@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UJI COBA - Durasi 20 Detik</title>
+    <title>Ujian Online - Durasi 60 Menit</title>
     <style>
         /* Desain Dasar */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; overflow: hidden; }
@@ -20,20 +20,18 @@
         #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; text-align: center; padding-top: 15%; }
         #overlay h1 { color: #d93025; font-size: 40px; margin-bottom: 10px; }
         #overlay p { font-size: 18px; color: #555; line-height: 1.6; padding: 0 20px; }
-        .btn-reset { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #1a73e8; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <div id="timer-container">Sisa Waktu: <span id="time">00:20</span></div>
-    <div class="warning">⚠️ MODE UJI COBA: TIMER 20 DETIK & ANTI-REFRESH</div>
+    <div id="timer-container">Sisa Waktu: <span id="time">60:00</span></div>
+    <div class="warning">⚠️ PERINGATAN: JANGAN REFRESH HALAMAN ATAU AKSES AKAN DIBLOKIR</div>
 </div>
 
 <div id="overlay">
     <h1 id="status-title">WAKTU HABIS!</h1>
-    <p id="status-message">Uji coba durasi 20 detik selesai.<br>Fitur otomatis menutup form berhasil dijalankan.</p>
-    <div class="btn-reset" onclick="sessionStorage.clear(); location.reload();">Reset & Coba Lagi</div>
+    <p id="status-message">Sesi ujian Anda telah berakhir sesuai durasi 60 menit.<br>Jawaban yang sudah terkirim akan diproses oleh sistem.</p>
 </div>
 
 <iframe id="googleForm" src="https://docs.google.com/forms/d/e/1FAIpQLScEziMdrL9bmYf7A4YyzxbIJx3e5OyYFYFwNTc0ImZ7nzhK5g/viewform?embedded=true">Memuat…</iframe>
@@ -46,17 +44,17 @@
     const statusMsg = document.querySelector('#status-message');
 
     // --- 1. LOGIKA ANTI-REFRESH ---
-    if (sessionStorage.getItem('trial_running')) {
+    if (sessionStorage.getItem('exam_active')) {
         formFrame.remove();
         overlay.style.display = 'block';
         statusTitle.textContent = "AKSES DIBLOKIR!";
-        statusMsg.innerHTML = "Anda terdeteksi melakukan refresh halaman.<br>Dalam mode asli, siswa tidak akan bisa masuk lagi tanpa bantuan admin.";
+        statusMsg.innerHTML = "Anda terdeteksi melakukan refresh halaman.<br>Demi integritas ujian, akses Anda telah dihentikan secara otomatis.";
     } else {
-        sessionStorage.setItem('trial_running', 'true');
+        sessionStorage.setItem('exam_active', 'true');
     }
 
-    // --- 2. LOGIKA TIMER 20 DETIK ---
-    var duration = 20; 
+    // --- 2. LOGIKA TIMER 60 MENIT ---
+    var duration = 60 * 60; // 60 Menit diubah ke detik
     var countdown = setInterval(function () {
         var minutes = parseInt(duration / 60, 10);
         var seconds = parseInt(duration % 60, 10);
@@ -71,13 +69,13 @@
             formFrame.remove();
             overlay.style.display = 'block';
             statusTitle.textContent = "WAKTU HABIS!";
-            statusMsg.innerHTML = "Uji coba durasi 20 detik berhasil.<br>Form telah dihapus otomatis dari layar.";
+            statusMsg.innerHTML = "Sesi ujian 60 menit telah berakhir.<br>Terima kasih.";
         }
     }, 1000);
 
-    // --- 3. PERINGATAN KELUAR ---
+    // --- 3. PERINGATAN SEBELUM KELUAR ---
     window.onbeforeunload = function() {
-        return "Peringatan: Refresh akan memblokir akses!";
+        return "Jawaban Anda belum terkirim! Refresh akan memblokir akses ujian.";
     };
 </script>
 
